@@ -4,13 +4,15 @@
 sudo: required
 
 # Use R
-language: r
-warnings_are_errors: true
+language: c
 
-notifications:
-  email:
-    on_success: change
-    on_failure: change
+env:
+  global:
+    - BIOC_USE_DEVEL="FALSE"  ## Use the current release version
+    - R_BUILD_ARGS="--no-build-vignettes --no-manual"
+    - R_CHECK_ARGS="--no-build-vignettes --no-manual --timings"  ## do not build vignettes or manual
+    - _R_CHECK_TIMINGS_="0"  ## get the timing information for the examples for all of your functions
+    - WARNINGS_ARE_ERRORS=1
 
 before_install:
   - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
@@ -20,19 +22,8 @@ before_install:
 install:
   ## For installing all CRAN dependencies using DESCRIPTION
   - ./travis-tool.sh install_deps
-
   ## For installing all Bioconductor dependencies using DESCRIPTION
   - ./travis-tool.sh install_bioc_deps
-
-#  ## Install Github packages
-#  - ./travis-tool.sh install_github jimhester/covr
-
-env:
-  global:
-    - BIOC_USE_DEVEL="FALSE"  ## Use the current release version
-    - R_BUILD_ARGS="--no-build-vignettes --no-manual"
-    - R_CHECK_ARGS="--no-build-vignettes --no-manual --timings"  ## do not build vignettes or manual
-    - _R_CHECK_TIMINGS_="0"  ## get the timing information for the examples for all of your functions
 
 script:
   - travis_wait ./travis-tool.sh run_tests
@@ -47,4 +38,11 @@ after_script:
 
 ## CodeCov
 #after_success:
+#  - ./travis-tool.sh install_github jimhester/covr
 #  - Rscript -e 'library(covr); codecov()'
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
+
