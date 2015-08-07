@@ -20,6 +20,10 @@ before_install:
   - ./travis-tool.sh bootstrap
 
 install:
+  ## Install a fixed version of RCppArmadillo
+  - wget http://cran.rstudio.com/src/contrib/Archive/RcppArmadillo/RcppArmadillo_0.4.650.1.1.tar.gz
+  - R CMD INSTALL RcppArmadillo_0.4.650.1.1.tar.gz
+  - rm -f RcppArmadillo_0.4.650.1.1.tar.gz
   ## For installing all CRAN dependencies using DESCRIPTION
   - ./travis-tool.sh install_deps
   ## For installing all Bioconductor dependencies using DESCRIPTION
